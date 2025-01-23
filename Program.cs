@@ -20,6 +20,15 @@ app.MapGet("/", () =>  "Api is working fine");
 
 app.MapGet("/hello", () => "Get Method: Hello");
 
+// return list of products
+var products = new List<Product>(){
+    new Product("Samsung s20", 44000),
+    new Product("iPhone 14", 150000),
+    new Product("Mac Mini", 120000)
+};
+
+app.MapGet("/products", () => Results.Ok(products));
+
 // return html
 app.MapGet("/html", () =>  Results.Content("<h1>Hello, HTML</h1>","text/html"));
 
@@ -38,3 +47,5 @@ app.MapDelete("/hello", () => {
 });
 
 app.Run();
+
+public record Product(string ProductName, decimal Price); 
