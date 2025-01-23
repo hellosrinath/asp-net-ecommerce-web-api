@@ -1,6 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// adding swaggerApi
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
+
+// adding swagger middleware
+if (app.Environment.IsDevelopment()){
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}    
 
 app.UseHttpsRedirection();
 
