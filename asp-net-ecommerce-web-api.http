@@ -2,20 +2,16 @@ GET http://localhost:5166/
 
 ###
 
-GET http://localhost:5166/html
+POST http://localhost:5166/api/v1/categories
 
 ###
 
-GET http://localhost:5166/hello
+DELETE  http://localhost:5166/api/v1/categories
 
 ###
 
-POST http://localhost:5166/hello
+PUT   http://localhost:5166/api/v1/categories
 
 ###
 
-PUT http://localhost:5166/hello
-
-###
-
-DELETE http://localhost:5166/hello
+GET    http://localhost:5166/api/v1/categories
