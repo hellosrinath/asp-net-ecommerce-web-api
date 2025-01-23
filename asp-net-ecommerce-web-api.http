@@ -2,6 +2,10 @@ GET http://localhost:5166/
 
 ###
 
+GET http://localhost:5166/html
+
+###
+
 GET http://localhost:5166/hello
 
 ###

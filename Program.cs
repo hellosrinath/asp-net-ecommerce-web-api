@@ -16,24 +16,25 @@ app.UseHttpsRedirection();
 
 // REST API: => GET, POST, PUT, DELETE
 
-app.MapGet("/", () => {
-    return "Api is working fine";
-});
+app.MapGet("/", () =>  "Api is working fine");
 
-app.MapGet("/hello", () => {
-    return "Get Method: Hello";
-});
+app.MapGet("/hello", () => "Get Method: Hello");
+
+// return html
+app.MapGet("/html", () =>  Results.Content("<h1>Hello, HTML</h1>","text/html"));
 
 app.MapPost("/hello", () => {
-    return "Post Method: Hello";
+    // return json object
+    var response = new {message = "Data successfully updated", success = true};
+    return Results.Ok(response);
 });
 
 app.MapPut("/hello", () => {
-    return "Put Method: Hello";
+    return Results.Accepted();  
 });
 
 app.MapDelete("/hello", () => {
-    return "Delete Method: Hello";
+    return Results.NoContent();
 });
 
 app.Run();
