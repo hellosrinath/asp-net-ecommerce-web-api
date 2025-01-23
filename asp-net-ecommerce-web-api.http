@@ -1,6 +1,17 @@
-@asp_net_ecommerce_web_api_HostAddress = http://localhost:5166
-
-GET {{asp_net_ecommerce_web_api_HostAddress}}/weatherforecast/
-Accept: application/json
+GET http://localhost:5166/
 
 ###
+
+GET http://localhost:5166/hello
+
+###
+
+POST http://localhost:5166/hello
+
+###
+
+PUT http://localhost:5166/hello
+
+###
+
+DELETE http://localhost:5166/hello
