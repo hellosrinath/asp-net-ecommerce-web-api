@@ -3,15 +3,32 @@ GET http://localhost:5166/
 ###
 
 POST http://localhost:5166/api/v1/categories
+Content-Type: application/json
+
+{
+    "name" : "Feature Phone",
+    "description" : "Feature Phone is a nice categories"
+}
 
 ###
 
-DELETE  http://localhost:5166/api/v1/categories
+DELETE  http://localhost:5166/api/v1/categories/326e01c4-815b-42a0-8cbc-69d01377618e
 
 ###
 
-PUT   http://localhost:5166/api/v1/categories
+PUT   http://localhost:5166/api/v1/categories/3de22e81-2117-4433-bb2e-f2bfd2cf6f76
+Content-Type: application/json
+
+{
+    "name" : "Feature Phones",
+    "description" : "Dabba Phone is a nice categories"
+}
 
 ###
 
 GET    http://localhost:5166/api/v1/categories
+
+
+###
+
+GET    http://localhost:5166/api/v1/categories?searchValue=winter

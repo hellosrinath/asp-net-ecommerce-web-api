@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // adding swaggerApi
@@ -19,12 +21,14 @@ List<Category> categories = new List<Category>();
 
 app.MapGet("/", () =>  "Api is working fine");
 
-app.MapPost("/api/v1/categories", () => 
+//    Create => Create a category => POST: /api/v1/categories
+app.MapPost("/api/v1/categories", ([FromBody] Category categoryData) => 
 {
+   // Console.WriteLine($"{categoryData}");
     var newCategory = new Category{
-        CategoryId = Guid.Parse("df5a7127-a044-49c2-b977-f47ad18c52fb"),
-        Name = "Smart Phones",
-        Description = "Smart Phone is a nice categories",
+        CategoryId = Guid.NewGuid(),
+        Name = categoryData.Name,
+        Description = categoryData.Description,
         CreatedAt = DateTime.UtcNow,
     };
     categories.Add(newCategory);
@@ -32,10 +36,11 @@ app.MapPost("/api/v1/categories", () =>
 });
 
 
-app.MapDelete("/api/v1/categories", () =>
+ ///Delete => Delete a category => Delete: /api/v1/categories/{categoryId}
+app.MapDelete("/api/v1/categories/{categoryId}", (Guid categoryId) =>
 {
     var foundCategory = categories.FirstOrDefault(c => c.CategoryId 
-    == Guid.Parse("df5a7127-a044-49c2-b977-f47ad18c52fb"));
+    == categoryId);
 
     if (foundCategory == null){
         return Results.NotFound("Category with this id does not exits");
@@ -47,28 +52,33 @@ app.MapDelete("/api/v1/categories", () =>
 
 });
 
-app.MapPut("/api/v1/categories", () =>
+
+//Update => Update a category => POST:/api/v1/categories{categoryId}
+app.MapPut("/api/v1/categories/{categoryId}", (Guid categoryId, [FromBody] Category categoryData) =>
 {
     var foundCategory = categories.FirstOrDefault(c => c.CategoryId 
-    == Guid.Parse("df5a7127-a044-49c2-b977-f47ad18c52fb"));
+    == categoryId);
 
     if (foundCategory == null){
         return Results.NotFound("Category with this id does not exits");
     }
     
-    foundCategory.Name = "Electronics";
-    foundCategory.Description = "This is good categories";
+    foundCategory.Name = categoryData.Name;
+    foundCategory.Description = categoryData.Description;
     
     return Results.NoContent();
 
 });
 
-
-app.MapGet("/api/v1/categories", () =>
+//    Read   => Read a category => GET: /api/v1/categories
+app.MapGet("/api/v1/categories", (string searchValue = "") =>
 {
+    System.Console.WriteLine(searchValue);
 
-    return Results.Ok(categories);
+     var searchCategory = categories.Where(c => !string.IsNullOrEmpty(c.Name) && 
+     c.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase)).ToList();
 
+    return Results.Ok(searchCategory);
 });
 
 
@@ -77,8 +87,8 @@ app.Run();
 
 public record Category {
     public Guid CategoryId {get; set;}
-    public string? Name {get; set;}
-    public string? Description {get; set;}
+    public required string Name {get; set;}
+    public required string Description {get; set;}
     public DateTime CreatedAt {get; set;}
 };
 
