@@ -37,7 +37,7 @@ app.MapPost("/api/v1/categories", ([FromBody] Category categoryData) =>
 
 
  ///Delete => Delete a category => Delete: /api/v1/categories/{categoryId}
-app.MapDelete("/api/v1/categories/{categoryId}", (Guid categoryId) =>
+app.MapDelete("/api/v1/categories/{categoryId:guid}", (Guid categoryId) =>
 {
     var foundCategory = categories.FirstOrDefault(c => c.CategoryId 
     == categoryId);
@@ -54,7 +54,7 @@ app.MapDelete("/api/v1/categories/{categoryId}", (Guid categoryId) =>
 
 
 //Update => Update a category => POST:/api/v1/categories{categoryId}
-app.MapPut("/api/v1/categories/{categoryId}", (Guid categoryId, [FromBody] Category categoryData) =>
+app.MapPut("/api/v1/categories/{categoryId:guid}", (Guid categoryId, [FromBody] Category categoryData) =>
 {
     var foundCategory = categories.FirstOrDefault(c => c.CategoryId 
     == categoryId);
