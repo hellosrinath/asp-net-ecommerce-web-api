@@ -6,8 +6,8 @@ POST http://localhost:5166/api/v1/categories
 Content-Type: application/json
 
 {
-    "name" : "Feature Phone",
-    "description" : "Feature Phone is a nice categories"
+    "name" : "Oil Collections",
+    "description": "This is good descriptions"
 }
 
 ###

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,17 @@ app.MapGet("/", () =>  "Api is working fine");
 //    Create => Create a category => POST: /api/v1/categories
 app.MapPost("/api/v1/categories", ([FromBody] Category categoryData) => 
 {
+
+    if (string.IsNullOrWhiteSpace(categoryData.Name.Trim())){
+        return Results.BadRequest("Category name can not be empty"); 
+    }
+    if (string.IsNullOrWhiteSpace(categoryData.Description.Trim())){
+        return Results.BadRequest("Category description can not be empty"); 
+    }
+    if (categoryData.Name.Length < 3){
+        return Results.BadRequest("Category Name can not bellow 3 characters");
+    }
+
    // Console.WriteLine($"{categoryData}");
     var newCategory = new Category{
         CategoryId = Guid.NewGuid(),
@@ -88,7 +100,7 @@ app.Run();
 public record Category {
     public Guid CategoryId {get; set;}
     public required string Name {get; set;}
-    public required string Description {get; set;}
+    public string Description {get; set;} = "";
     public DateTime CreatedAt {get; set;}
 };
 
