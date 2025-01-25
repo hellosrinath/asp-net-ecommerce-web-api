@@ -6,17 +6,16 @@ POST http://localhost:5166/api/v1/categories
 Content-Type: application/json
 
 {
-    "name" : "",
+    "name" : "Smart Phone",
     "description": "This is good descriptions"
 }
 
 ###
 
-DELETE  http://localhost:5166/api/v1/categories/5699b6f3-1b2d-4dc0-b2d7-c75518bd092e
-
+DELETE  http://localhost:5166/api/v1/categories/dd2b100e-32f1-4e5f-a0da-8933f59c927f
 ###
 
-PUT   http://localhost:5166/api/v1/categories/c091a8da-70ca-4c20-a59c-70b606b5acdd
+PUT   http://localhost:5166/api/v1/categories/d53a49ec-9b2f-4c9d-8893-e6c0dcad7391
 Content-Type: application/json
 
 {
@@ -31,4 +30,4 @@ GET    http://localhost:5166/api/v1/categories
 
 ###
 
-GET    http://localhost:5166/api/v1/categories?searchValue=phone
+GET    http://localhost:5166/api/v1/categories?searchValue=dfg

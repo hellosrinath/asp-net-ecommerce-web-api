@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using asp_net_ecommerce_web_api.DTOs;
 using asp_net_ecommerce_web_api.models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +13,7 @@ namespace asp_net_ecommerce_web_api.controllers
 
 
         [HttpPost]
-        public IActionResult CreateCategory([FromBody] Category categoryData)
+        public IActionResult CreateCategory([FromBody] CategoryCreateDto categoryData)
         {
             if (string.IsNullOrWhiteSpace(categoryData.Name.Trim()))
             {
@@ -39,22 +36,53 @@ namespace asp_net_ecommerce_web_api.controllers
                 CreatedAt = DateTime.UtcNow,
             };
             categories.Add(newCategory);
-            return Created($"/api/v1/categories/{newCategory.CategoryId}", newCategory);
+
+            var categoryReadDto = new CategoryReadDto
+            {
+                CategoryId = newCategory.CategoryId,
+                Name = newCategory.Name,
+                Description = newCategory.Description,
+                CreatedAt = newCategory.CreatedAt
+            };
+
+            return Created($"/api/v1/categories/{categoryReadDto.CategoryId}", categoryReadDto);
         }
 
         [HttpGet]
-        public IActionResult GetCategories([FromQuery] string searchValue="")  
+        public IActionResult GetCategories([FromQuery] string searchValue = "")
         {
             System.Console.WriteLine(searchValue);
 
-            var searchCategory = categories.Where(c => !string.IsNullOrEmpty(c.Name) && 
-            c.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (!string.IsNullOrWhiteSpace(searchValue))
+            {
+                var searchCategory = categories.Where(c => !string.IsNullOrEmpty(c.Name) &&
+                   c.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            return Ok(searchCategory);
+
+                var categoryRead = searchCategory.Select(c => new CategoryReadDto
+                {
+                    CategoryId = c.CategoryId,
+                    Name = c.Name,
+                    Description = c.Description,
+                    CreatedAt = c.CreatedAt
+                });
+                return Ok(categoryRead);
+            }
+
+
+            var categoryList = categories.Select(c => new CategoryReadDto
+            {
+                CategoryId = c.CategoryId,
+                Name = c.Name,
+                Description = c.Description,
+                CreatedAt = c.CreatedAt
+            });
+
+            return Ok(categoryList);
         }
 
         [HttpPut("{categoryId:guid}")]
-        public IActionResult UpdateCategory(Guid categoryId, [FromBody] Category categoryData)
+        public IActionResult UpdateCategory(Guid categoryId, [FromBody] CategoryUpdateDto categoryData)
         {
             var foundCategory = categories.FirstOrDefault(c => c.CategoryId == categoryId);
 

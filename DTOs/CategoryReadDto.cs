@@ -1,6 +1,6 @@
-namespace asp_net_ecommerce_web_api.models
+namespace asp_net_ecommerce_web_api.DTOs
 {
-    public class Category
+    public class CategoryReadDto
     {
         public Guid CategoryId { get; set; }
         public required string Name { get; set; }
