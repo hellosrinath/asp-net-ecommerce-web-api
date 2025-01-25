@@ -15,7 +15,6 @@ namespace asp_net_ecommerce_web_api.controllers
         [HttpPost]
         public IActionResult CreateCategory([FromBody] CategoryCreateDto categoryData)
         {
-
             var newCategory = new Category
             {
                 CategoryId = Guid.NewGuid(),
@@ -33,40 +32,30 @@ namespace asp_net_ecommerce_web_api.controllers
                 CreatedAt = newCategory.CreatedAt
             };
 
-            return Created($"/api/v1/categories/{categoryReadDto.CategoryId}", categoryReadDto);
+            return Created($"/api/v1/categories/{categoryReadDto.CategoryId}",
+            ApiResponse<CategoryReadDto>.SuccessResponse(
+                categoryReadDto,
+                201,
+                "Category created successfully"
+              ));
         }
 
         [HttpGet]
-        public IActionResult GetCategories([FromQuery] string searchValue = "")
+        public IActionResult GetCategories()
         {
-            System.Console.WriteLine(searchValue);
-
-            if (!string.IsNullOrWhiteSpace(searchValue))
-            {
-                var searchCategory = categories.Where(c => !string.IsNullOrEmpty(c.Name) &&
-                   c.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase)).ToList();
-
-
-                var categoryRead = searchCategory.Select(c => new CategoryReadDto
-                {
-                    CategoryId = c.CategoryId,
-                    Name = c.Name,
-                    Description = c.Description,
-                    CreatedAt = c.CreatedAt
-                });
-                return Ok(categoryRead);
-            }
-
-
             var categoryList = categories.Select(c => new CategoryReadDto
             {
                 CategoryId = c.CategoryId,
                 Name = c.Name,
                 Description = c.Description,
                 CreatedAt = c.CreatedAt
-            });
+            }).ToList();
 
-            return Ok(categoryList);
+            return Ok(ApiResponse<List<CategoryReadDto>>.SuccessResponse(
+                categoryList,
+                200,
+                "Categories returned successfully"
+              ));
         }
 
         [HttpPut("{categoryId:guid}")]
@@ -76,13 +65,21 @@ namespace asp_net_ecommerce_web_api.controllers
 
             if (foundCategory == null)
             {
-                return NotFound("Category with this id does not exits");
+                return NotFound(ApiResponse<object>.ErrorResponse(new List<string>
+                { "Category with this id does not exits" },
+                 404,
+                 "Validation Failed")
+                 );
             }
 
             foundCategory.Name = categoryData.Name;
             foundCategory.Description = categoryData.Description;
 
-            return NoContent();
+            return Ok(ApiResponse<object?>.SuccessResponse(
+                null,
+                200,
+                "Category updated successfully"
+              ));
         }
 
         [HttpDelete("{categoryId:guid}")]
@@ -92,12 +89,20 @@ namespace asp_net_ecommerce_web_api.controllers
 
             if (foundCategory == null)
             {
-                return NotFound("Category with this id does not exits");
+                return NotFound(ApiResponse<object>.ErrorResponse(new List<string>
+                { "Category with this id does not exits" },
+                 404,
+                 "Validation Failed")
+                 );
             }
 
             categories.Remove(foundCategory);
 
-            return NoContent();
+            return Ok(ApiResponse<object?>.SuccessResponse(
+                null,
+                200,
+                "Category deteled successfully"
+              ));
         }
 
     }
