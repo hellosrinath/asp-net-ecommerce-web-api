@@ -2,32 +2,32 @@ GET http://localhost:5166/
 
 ###
 
-POST http://localhost:5166/api/v1/categories
+POST http://localhost:5166/v1/api/categories
 Content-Type: application/json
 
 {
-    "name" : "Electronics",
+    "name" : "Foods and Drinks",
     "description": "This is good descriptions"
 }
 
 ###
 
-DELETE  http://localhost:5166/api/v1/categories/12b9faee-0bf8-4897-9f00-e90271f88acb
+DELETE  http://localhost:5166/v1/api/categories/a95df686-8555-4d3b-ad50-26a3455a7dc6
 ###
 
-PUT   http://localhost:5166/api/v1/categories/12b9faee-0bf8-4897-9f00-e90271f88acb
+PUT   http://localhost:5166/v1/api/categories/a95df686-8555-4d3b-ad50-26a3455a7dc6
 Content-Type: application/json
 
 {
-    "name" : "Da",
-    "description" : "Da"
+    "name" : "Fish",
+    "description": "This is good descriptions"
 }
 
 ###
 
-GET    http://localhost:5166/api/v1/categories
+GET    http://localhost:5166/v1/api/categories
 
 ###
 
-GET    http://localhost:5166/api/v1/categories/e740f51e-1fac-4745-9088-338a7af90f89
+GET    http://localhost:5166/v1/api/categories/a95df686-8555-4d3b-ad50-26a3455a7dc6
 

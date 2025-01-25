@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace asp_net_ecommerce_web_api.controllers
 {
     [ApiController]
-    [Route("api/v1/categories")]
+    [Route("v1/api/categories")]
     public class CategoryApiController : ControllerBase
     {
 
@@ -32,7 +32,7 @@ namespace asp_net_ecommerce_web_api.controllers
                 CreatedAt = newCategory.CreatedAt
             };
 
-            return Created($"/api/v1/categories/{categoryReadDto.CategoryId}",
+            return Created(nameof(GetCategoryById),
             ApiResponse<CategoryReadDto>.SuccessResponse(
                 categoryReadDto,
                 201,
@@ -146,4 +146,14 @@ namespace asp_net_ecommerce_web_api.controllers
     Read   => Read a category => GET: /api/v1/categories
     Update => Update a category => POST:/api/v1/categories
     Delete => Delete a category => Delete: /api/v1/categories
+
+
+    Best URL Naming practices for rest api
+
+    1. Descriptive name
+    2. plurals
+    3. plurals/{singularNoun} => /categories/{categoryId}
+    4. use hypens for multiple words for improving the redability => /producs-categories
+    5. versioning
+    6. avoid verbs in url path /createCategory => POST/ categories
 */
