@@ -15,18 +15,6 @@ namespace asp_net_ecommerce_web_api.controllers
         [HttpPost]
         public IActionResult CreateCategory([FromBody] CategoryCreateDto categoryData)
         {
-            if (string.IsNullOrWhiteSpace(categoryData.Name.Trim()))
-            {
-                return BadRequest("Category name can not be empty");
-            }
-            if (string.IsNullOrWhiteSpace(categoryData.Description.Trim()))
-            {
-                return BadRequest("Category description can not be empty");
-            }
-            if (categoryData.Name.Length < 3)
-            {
-                return BadRequest("Category Name can not bellow 3 characters");
-            }
 
             var newCategory = new Category
             {
