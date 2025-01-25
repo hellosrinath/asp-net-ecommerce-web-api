@@ -58,6 +58,35 @@ namespace asp_net_ecommerce_web_api.controllers
               ));
         }
 
+        [HttpGet("{categoryId:guid}")]
+        public IActionResult GetCategoryById(Guid categoryId)
+        {
+
+            var foundCategory = categories.FirstOrDefault(c => c.CategoryId == categoryId);
+            if (foundCategory == null)
+            {
+                return NotFound(ApiResponse<object>.ErrorResponse(new List<string>
+                { "Category with this id does not exits" },
+                 404,
+                 "")
+                 );
+            }
+
+            var category = new CategoryReadDto
+            {
+                CategoryId = foundCategory.CategoryId,
+                Name = foundCategory.Name,
+                Description = foundCategory.Description,
+                CreatedAt = foundCategory.CreatedAt
+            };
+
+            return Ok(ApiResponse<CategoryReadDto>.SuccessResponse(
+                category,
+                200,
+                "Category returned successfully"
+              ));
+        }
+
         [HttpPut("{categoryId:guid}")]
         public IActionResult UpdateCategory(Guid categoryId, [FromBody] CategoryUpdateDto categoryData)
         {
@@ -68,7 +97,7 @@ namespace asp_net_ecommerce_web_api.controllers
                 return NotFound(ApiResponse<object>.ErrorResponse(new List<string>
                 { "Category with this id does not exits" },
                  404,
-                 "Validation Failed")
+                 "")
                  );
             }
 

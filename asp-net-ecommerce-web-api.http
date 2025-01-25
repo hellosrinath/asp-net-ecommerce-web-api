@@ -6,7 +6,7 @@ POST http://localhost:5166/api/v1/categories
 Content-Type: application/json
 
 {
-    "name" : "d",
+    "name" : "Electronics",
     "description": "This is good descriptions"
 }
 
@@ -26,4 +26,8 @@ Content-Type: application/json
 ###
 
 GET    http://localhost:5166/api/v1/categories
+
+###
+
+GET    http://localhost:5166/api/v1/categories/e740f51e-1fac-4745-9088-338a7af90f89
 
