@@ -1,9 +1,11 @@
 using asp_net_ecommerce_web_api.controllers;
+using asp_net_ecommerce_web_api.services;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// adding swaggerApi
+builder.Services.AddSingleton<CategoryServices>();
+
 builder.Services.AddControllers();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
