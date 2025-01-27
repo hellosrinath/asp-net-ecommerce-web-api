@@ -1,4 +1,5 @@
 using asp_net_ecommerce_web_api.DTOs;
+using asp_net_ecommerce_web_api.Interface;
 using asp_net_ecommerce_web_api.models;
 using asp_net_ecommerce_web_api.services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,9 @@ namespace asp_net_ecommerce_web_api.controllers
     public class CategoryApiController : ControllerBase
     {
 
-        private CategoryServices _categoryService;
+        private ICategoryService _categoryService;
 
-        public CategoryApiController(CategoryServices categoryServices)
+        public CategoryApiController(ICategoryService categoryServices)
         {
             _categoryService = categoryServices;
         }
@@ -66,7 +67,7 @@ namespace asp_net_ecommerce_web_api.controllers
         [HttpPut("{categoryId:guid}")]
         public IActionResult UpdateCategory(Guid categoryId, [FromBody] CategoryUpdateDto categoryData)
         {
-            var foundCategory = _categoryService.UpdateCategory(categoryId,categoryData);
+            var foundCategory = _categoryService.UpdateCategory(categoryId, categoryData);
 
             if (!foundCategory)
             {

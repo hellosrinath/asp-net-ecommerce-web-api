@@ -1,10 +1,11 @@
 using asp_net_ecommerce_web_api.controllers;
+using asp_net_ecommerce_web_api.Interface;
 using asp_net_ecommerce_web_api.services;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<CategoryServices>();
+builder.Services.AddScoped<ICategoryService, CategoryServices>();
 
 builder.Services.AddControllers();
 
