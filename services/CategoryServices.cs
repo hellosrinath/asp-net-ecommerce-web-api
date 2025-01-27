@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using asp_net_ecommerce_web_api.DTOs;
 using asp_net_ecommerce_web_api.Interface;
 using asp_net_ecommerce_web_api.models;
+using AutoMapper;
 
 namespace asp_net_ecommerce_web_api.services
 {
@@ -12,53 +9,36 @@ namespace asp_net_ecommerce_web_api.services
     {
         private static readonly List<Category> categories = new List<Category>();
 
+        private readonly IMapper _mapper;
+
+        public CategoryServices(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
         public List<CategoryReadDto> GetAllCategories()
         {
-            return categories.Select(c => new CategoryReadDto
-            {
-                CategoryId = c.CategoryId,
-                Name = c.Name,
-                Description = c.Description,
-                CreatedAt = c.CreatedAt
-            }).ToList();
+            return _mapper.Map<List<CategoryReadDto>>(categories);
         }
 
         public CategoryReadDto CreateCategory(CategoryCreateDto categoryData)
         {
-            var newCategory = new Category
-            {
-                CategoryId = Guid.NewGuid(),
-                Name = categoryData.Name,
-                Description = categoryData.Description,
-                CreatedAt = DateTime.UtcNow,
-            };
+            // CategoryCreateDTO => Category
+            var newCategory = _mapper.Map<Category>(categoryData);
+            newCategory.CategoryId = Guid.NewGuid();
+            newCategory.CreatedAt = DateTime.UtcNow;
+
             categories.Add(newCategory);
 
-            return new CategoryReadDto
-            {
-                CategoryId = newCategory.CategoryId,
-                Name = newCategory.Name,
-                Description = newCategory.Description,
-                CreatedAt = newCategory.CreatedAt
-            };
+            return _mapper.Map<CategoryReadDto>(newCategory);
         }
 
         public CategoryReadDto? GetCategoryById(Guid categoryId)
         {
 
             var foundCategory = categories.FirstOrDefault(c => c.CategoryId == categoryId);
-            if (foundCategory == null)
-            {
-                return null;
-            }
-
-            return new CategoryReadDto
-            {
-                CategoryId = foundCategory.CategoryId,
-                Name = foundCategory.Name,
-                Description = foundCategory.Description,
-                CreatedAt = foundCategory.CreatedAt
-            };
+            
+            return foundCategory == null ? null : _mapper.Map<CategoryReadDto>(foundCategory);
         }
 
         public bool UpdateCategory(Guid categoryId, CategoryUpdateDto categoryData)
@@ -70,8 +50,10 @@ namespace asp_net_ecommerce_web_api.services
                 return false;
             }
 
-            foundCategory.Name = categoryData.Name;
-            foundCategory.Description = categoryData.Description;
+            // CategoryUpdateDto => Category
+            _mapper.Map(categoryData, foundCategory);
+            // foundCategory.Name = categoryData.Name;
+            // foundCategory.Description = categoryData.Description;
 
             return true;
         }
