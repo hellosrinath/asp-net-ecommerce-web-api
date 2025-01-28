@@ -9,6 +9,7 @@ namespace asp_net_ecommerce_web_api.DTOs
         public string Name { get; set; } = string.Empty;
 
         [StringLength(500, ErrorMessage = "Category description can not exceed 500 characters")]
+        
         public string Description { get; set; } = "";
     }
 }
