@@ -1,49 +1,57 @@
+using System.Threading.Tasks;
+using asp_net_ecommerce_web_api.data;
 using asp_net_ecommerce_web_api.DTOs;
 using asp_net_ecommerce_web_api.Interface;
 using asp_net_ecommerce_web_api.models;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace asp_net_ecommerce_web_api.services
 {
     public class CategoryServices : ICategoryService
     {
-        private static readonly List<Category> categories = new List<Category>();
+
+        private readonly AppDbContext _appDbContext;
 
         private readonly IMapper _mapper;
 
-        public CategoryServices(IMapper mapper)
+        public CategoryServices(AppDbContext appDbContext, IMapper mapper)
         {
+            _appDbContext = appDbContext;
             _mapper = mapper;
         }
 
-        public List<CategoryReadDto> GetAllCategories()
+        public async Task<List<CategoryReadDto>> GetAllCategories()
         {
+            var categories = await _appDbContext.Categories.ToListAsync();
+
             return _mapper.Map<List<CategoryReadDto>>(categories);
         }
 
-        public CategoryReadDto CreateCategory(CategoryCreateDto categoryData)
+        public async Task<CategoryReadDto> CreateCategory(CategoryCreateDto categoryData)
         {
             // CategoryCreateDTO => Category
             var newCategory = _mapper.Map<Category>(categoryData);
             newCategory.CategoryId = Guid.NewGuid();
             newCategory.CreatedAt = DateTime.UtcNow;
 
-            categories.Add(newCategory);
+            await _appDbContext.Categories.AddAsync(newCategory);
+            await _appDbContext.SaveChangesAsync();
 
             return _mapper.Map<CategoryReadDto>(newCategory);
         }
 
-        public CategoryReadDto? GetCategoryById(Guid categoryId)
+        public async Task<CategoryReadDto?> GetCategoryById(Guid categoryId)
         {
 
-            var foundCategory = categories.FirstOrDefault(c => c.CategoryId == categoryId);
-            
+            var foundCategory = await _appDbContext.Categories.FindAsync(categoryId);
+
             return foundCategory == null ? null : _mapper.Map<CategoryReadDto>(foundCategory);
         }
 
-        public bool UpdateCategory(Guid categoryId, CategoryUpdateDto categoryData)
+        public async Task<bool> UpdateCategory(Guid categoryId, CategoryUpdateDto categoryData)
         {
-            var foundCategory = categories.FirstOrDefault(c => c.CategoryId == categoryId);
+            var foundCategory = await _appDbContext.Categories.FindAsync(categoryId);
 
             if (foundCategory == null)
             {
@@ -52,23 +60,25 @@ namespace asp_net_ecommerce_web_api.services
 
             // CategoryUpdateDto => Category
             _mapper.Map(categoryData, foundCategory);
-            // foundCategory.Name = categoryData.Name;
-            // foundCategory.Description = categoryData.Description;
+
+             _appDbContext.Categories.Update(foundCategory);
+            await _appDbContext.SaveChangesAsync();
 
             return true;
         }
 
 
-        public bool DeleteCategory(Guid categoryId)
+        public async Task<bool> DeleteCategory(Guid categoryId)
         {
-            var foundCategory = categories.FirstOrDefault(c => c.CategoryId == categoryId);
+            var foundCategory = await _appDbContext.Categories.FindAsync(categoryId);
 
             if (foundCategory == null)
             {
                 return false;
             }
 
-            categories.Remove(foundCategory);
+            _appDbContext.Categories.Remove(foundCategory);
+            await _appDbContext.SaveChangesAsync();
 
             return true;
         }

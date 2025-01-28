@@ -6,16 +6,16 @@ POST http://localhost:5166/v1/api/categories
 Content-Type: application/json
 
 {
-    "name" : "Smart Phones",
+    "name" : "Dabba Phones",
     "description": "This is good descriptions"
 }
 
 ###
 
-DELETE  http://localhost:5166/v1/api/categories/aead703c-cf07-49e0-8032-bb2fa2b6b88f
+DELETE  http://localhost:5166/v1/api/categories/fa220ee3-a4d2-4f42-80de-c7b59220a162
 ###
 
-PUT   http://localhost:5166/v1/api/categories/aead703c-cf07-49e0-8032-bb2fa2b6b88f
+PUT   http://localhost:5166/v1/api/categories/fa220ee3-a4d2-4f42-80de-c7b59220a162
 Content-Type: application/json
 
 {
@@ -29,5 +29,5 @@ GET    http://localhost:5166/v1/api/categories
 
 ###
 
-GET    http://localhost:5166/v1/api/categories/aead703c-cf07-49e0-8032-bb2fa2b6b88f
+GET    http://localhost:5166/v1/api/categories/fa220ee3-a4d2-4f42-80de-c7b59220a162
 

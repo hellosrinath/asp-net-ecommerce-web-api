@@ -20,9 +20,9 @@ namespace asp_net_ecommerce_web_api.controllers
 
 
         [HttpPost]
-        public IActionResult CreateCategory([FromBody] CategoryCreateDto categoryData)
+        public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateDto categoryData)
         {
-            var categoryReadDto = _categoryService.CreateCategory(categoryData);
+            var categoryReadDto = await _categoryService.CreateCategory(categoryData);
 
             return Created(nameof(GetCategoryById),
             ApiResponse<CategoryReadDto>.SuccessResponse(
@@ -33,9 +33,9 @@ namespace asp_net_ecommerce_web_api.controllers
         }
 
         [HttpGet]
-        public IActionResult GetCategories()
+        public async Task<IActionResult> GetCategories()
         {
-            var categoryList = _categoryService.GetAllCategories();
+            var categoryList = await _categoryService.GetAllCategories();
 
             return Ok(ApiResponse<List<CategoryReadDto>>.SuccessResponse(
                 categoryList,
@@ -45,10 +45,10 @@ namespace asp_net_ecommerce_web_api.controllers
         }
 
         [HttpGet("{categoryId:guid}")]
-        public IActionResult GetCategoryById(Guid categoryId)
+        public async Task<IActionResult> GetCategoryById(Guid categoryId)
         {
 
-            var foundCategory = _categoryService.GetCategoryById(categoryId);
+            var foundCategory = await _categoryService.GetCategoryById(categoryId);
             if (foundCategory == null)
             {
                 return NotFound(ApiResponse<object>.ErrorResponse(new List<string>
@@ -65,9 +65,9 @@ namespace asp_net_ecommerce_web_api.controllers
         }
 
         [HttpPut("{categoryId:guid}")]
-        public IActionResult UpdateCategory(Guid categoryId, [FromBody] CategoryUpdateDto categoryData)
+        public async Task<IActionResult> UpdateCategory(Guid categoryId, [FromBody] CategoryUpdateDto categoryData)
         {
-            var foundCategory = _categoryService.UpdateCategory(categoryId, categoryData);
+            var foundCategory = await _categoryService.UpdateCategory(categoryId, categoryData);
 
             if (!foundCategory)
             {
@@ -86,9 +86,9 @@ namespace asp_net_ecommerce_web_api.controllers
         }
 
         [HttpDelete("{categoryId:guid}")]
-        public IActionResult DeleteCategory(Guid categoryId)
+        public async Task<IActionResult> DeleteCategory(Guid categoryId)
         {
-            var foundCategory = _categoryService.DeleteCategory(categoryId);
+            var foundCategory = await _categoryService.DeleteCategory(categoryId);
 
             if (!foundCategory)
             {
