@@ -23,10 +23,20 @@ namespace asp_net_ecommerce_web_api.services
         }
 
         public async Task<PaginatedResult<CategoryReadDto>> GetAllCategories(
-            int pageNumber, int pageSize
+            int pageNumber, int pageSize, string? search = null
         )
         {
             IQueryable<Category> query = _appDbContext.Categories;
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+
+                // query = query.Where(c => c.Name.ToLower().Contains(search.ToLower()) ||
+                // c.Description.ToLower().Contains(search.ToLower()));
+                var formattedSearch = $"%{search.Trim()}%";
+                query = query.Where(c => EF.Functions.ILike(c.Name, formattedSearch) ||
+                EF.Functions.ILike(c.Description, formattedSearch));
+            }
 
             var totalCount = await query.CountAsync();
 
@@ -37,11 +47,11 @@ namespace asp_net_ecommerce_web_api.services
             .Take(pageSize).ToListAsync();
 
 
-          //  var categories = await _appDbContext.Categories.ToListAsync();
+            //  var categories = await _appDbContext.Categories.ToListAsync();
 
             var results = _mapper.Map<List<CategoryReadDto>>(items);
 
-            return new PaginatedResult<CategoryReadDto> 
+            return new PaginatedResult<CategoryReadDto>
             {
                 Items = results,
                 TotalCount = totalCount,

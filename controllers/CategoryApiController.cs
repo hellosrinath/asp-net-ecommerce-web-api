@@ -37,12 +37,13 @@ namespace asp_net_ecommerce_web_api.controllers
         [HttpGet]
         public async Task<IActionResult> GetCategories(
             [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 6
+            [FromQuery] int pageSize = 6,
+            [FromQuery] string? search = null
         )
         {
 
             var categoryList = await _categoryService
-            .GetAllCategories(pageNumber, pageSize);
+            .GetAllCategories(pageNumber, pageSize,search);
 
             return Ok(ApiResponse<PaginatedResult<CategoryReadDto>>.SuccessResponse(
                 categoryList,

@@ -9,7 +9,7 @@ namespace asp_net_ecommerce_web_api.Interface
 {
     public interface ICategoryService
     {
-        Task<PaginatedResult<CategoryReadDto>> GetAllCategories(int pageNumber, int pageSize);
+        Task<PaginatedResult<CategoryReadDto>> GetAllCategories(int pageNumber, int pageSize, string? search = null);
         Task<CategoryReadDto> CreateCategory(CategoryCreateDto categoryData);
         Task<CategoryReadDto?> GetCategoryById(Guid categoryId);
         Task<bool> UpdateCategory(Guid categoryId, CategoryUpdateDto categoryData);
