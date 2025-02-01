@@ -32,12 +32,19 @@ namespace asp_net_ecommerce_web_api.controllers
               ));
         }
 
+        // GET: /api/categories?pageNumber=2 && pageSize=5
+        // Read Categories
         [HttpGet]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetCategories(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 6
+        )
         {
-            var categoryList = await _categoryService.GetAllCategories();
 
-            return Ok(ApiResponse<List<CategoryReadDto>>.SuccessResponse(
+            var categoryList = await _categoryService
+            .GetAllCategories(pageNumber, pageSize);
+
+            return Ok(ApiResponse<PaginatedResult<CategoryReadDto>>.SuccessResponse(
                 categoryList,
                 200,
                 "Categories returned successfully"

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using asp_net_ecommerce_web_api.controllers;
 using asp_net_ecommerce_web_api.data;
 using asp_net_ecommerce_web_api.DTOs;
 using asp_net_ecommerce_web_api.Interface;
@@ -21,11 +22,33 @@ namespace asp_net_ecommerce_web_api.services
             _mapper = mapper;
         }
 
-        public async Task<List<CategoryReadDto>> GetAllCategories()
+        public async Task<PaginatedResult<CategoryReadDto>> GetAllCategories(
+            int pageNumber, int pageSize
+        )
         {
-            var categories = await _appDbContext.Categories.ToListAsync();
+            IQueryable<Category> query = _appDbContext.Categories;
 
-            return _mapper.Map<List<CategoryReadDto>>(categories);
+            var totalCount = await query.CountAsync();
+
+            // pagination, pageNumber =1 , pageSize = 5
+            // 20 categories
+            // Skip((pageNumber-1)*pageSize).Take(pageSize)
+            var items = await query.Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize).ToListAsync();
+
+
+          //  var categories = await _appDbContext.Categories.ToListAsync();
+
+            var results = _mapper.Map<List<CategoryReadDto>>(items);
+
+            return new PaginatedResult<CategoryReadDto> 
+            {
+                Items = results,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
         }
 
         public async Task<CategoryReadDto> CreateCategory(CategoryCreateDto categoryData)
@@ -61,7 +84,7 @@ namespace asp_net_ecommerce_web_api.services
             // CategoryUpdateDto => Category
             _mapper.Map(categoryData, foundCategory);
 
-             _appDbContext.Categories.Update(foundCategory);
+            _appDbContext.Categories.Update(foundCategory);
             await _appDbContext.SaveChangesAsync();
 
             return true;
