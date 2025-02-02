@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using asp_net_ecommerce_web_api.controllers;
 using asp_net_ecommerce_web_api.data;
 using asp_net_ecommerce_web_api.DTOs;
+using asp_net_ecommerce_web_api.enums;
 using asp_net_ecommerce_web_api.Interface;
 using asp_net_ecommerce_web_api.models;
 using AutoMapper;
@@ -23,7 +24,7 @@ namespace asp_net_ecommerce_web_api.services
         }
 
         public async Task<PaginatedResult<CategoryReadDto>> GetAllCategories(
-            int pageNumber, int pageSize, string? search = null
+            int pageNumber, int pageSize, string? search = null, string? sortOrder = null
         )
         {
             IQueryable<Category> query = _appDbContext.Categories;
@@ -36,6 +37,56 @@ namespace asp_net_ecommerce_web_api.services
                 var formattedSearch = $"%{search.Trim()}%";
                 query = query.Where(c => EF.Functions.ILike(c.Name, formattedSearch) ||
                 EF.Functions.ILike(c.Description, formattedSearch));
+            }
+
+            if (string.IsNullOrWhiteSpace(sortOrder))
+            {
+                query = query.OrderBy(c => c.Name);
+            }
+            else
+            {
+                var formattedSortOrder = sortOrder.Trim().ToLower();
+
+                if (Enum.TryParse<SortOrder>(formattedSortOrder, true, out var parsedSortOrder))
+                {
+                    query = parsedSortOrder switch
+                    {
+                        SortOrder.NameAsc => query.OrderBy(c => c.Name),
+                        SortOrder.NameDesc => query.OrderByDescending(c => c.Name),
+                        SortOrder.CreatedAtAsc => query.OrderBy(c => c.CreatedAt),
+                        SortOrder.CreatedAtDesc => query.OrderByDescending(c => c.CreatedAt),
+                        _ => query.OrderBy(c => c.Name)
+                    };
+                }
+
+                // query = formattedSortOrder switch
+                // {
+                //     "name_asc" => query.OrderBy(c => c.Name),
+                //     "name_desc" => query.OrderByDescending(c => c.Name),
+                //     "createdat_asc" => query.OrderBy(c => c.CreatedAt),
+                //     "createdat_desc" => query.OrderByDescending(c => c.CreatedAt),
+                //     _ => query.OrderBy(c => c.Name)
+                // };
+
+                // switch (formattedSortOrder.ToLower())
+                // {
+                //     case "name_asc":
+                //         query = query.OrderBy(c => c.Name);
+                //         break;
+                //     case "name_desc":
+                //         query = query.OrderByDescending(c => c.Name);
+                //         break;
+                //     case "createdat_asc":
+                //         query = query.OrderBy(c => c.CreatedAt);
+                //         break;
+                //     case "createdat_desc":
+                //         query = query.OrderByDescending(c => c.CreatedAt);
+                //         break;
+                //     default:
+                //         query = query.OrderBy(c => c.Name);
+                //         break;
+                // }
+
             }
 
             var totalCount = await query.CountAsync();
