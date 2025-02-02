@@ -1,4 +1,5 @@
 using asp_net_ecommerce_web_api.DTOs;
+using asp_net_ecommerce_web_api.Helper;
 using asp_net_ecommerce_web_api.Interface;
 using asp_net_ecommerce_web_api.models;
 using asp_net_ecommerce_web_api.services;
@@ -36,15 +37,13 @@ namespace asp_net_ecommerce_web_api.controllers
         // Read Categories
         [HttpGet]
         public async Task<IActionResult> GetCategories(
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 6,
-            [FromQuery] string? search = null,
-            [FromQuery] string? sortOrder = null
+            [FromQuery] QueryParameters parameters
         )
         {
+            parameters.Validate();
 
             var categoryList = await _categoryService
-            .GetAllCategories(pageNumber, pageSize, search,sortOrder);
+            .GetAllCategories(parameters);
 
             return Ok(ApiResponse<PaginatedResult<CategoryReadDto>>.SuccessResponse(
                 categoryList,

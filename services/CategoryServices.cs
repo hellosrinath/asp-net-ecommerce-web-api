@@ -3,6 +3,7 @@ using asp_net_ecommerce_web_api.controllers;
 using asp_net_ecommerce_web_api.data;
 using asp_net_ecommerce_web_api.DTOs;
 using asp_net_ecommerce_web_api.enums;
+using asp_net_ecommerce_web_api.Helper;
 using asp_net_ecommerce_web_api.Interface;
 using asp_net_ecommerce_web_api.models;
 using AutoMapper;
@@ -24,9 +25,15 @@ namespace asp_net_ecommerce_web_api.services
         }
 
         public async Task<PaginatedResult<CategoryReadDto>> GetAllCategories(
-            int pageNumber, int pageSize, string? search = null, string? sortOrder = null
+            QueryParameters parameters
         )
         {
+
+            var search = parameters.Search;
+            var sortOrder = parameters.SortOrder;
+            var pageNumber = parameters.PageNumber;
+            var pageSize = parameters.PageSize;
+
             IQueryable<Category> query = _appDbContext.Categories;
 
             if (!string.IsNullOrWhiteSpace(search))
@@ -116,8 +123,7 @@ namespace asp_net_ecommerce_web_api.services
         {
             // CategoryCreateDTO => Category
             var newCategory = _mapper.Map<Category>(categoryData);
-            newCategory.CategoryId = Guid.NewGuid();
-            newCategory.CreatedAt = DateTime.UtcNow;
+          
 
             await _appDbContext.Categories.AddAsync(newCategory);
             await _appDbContext.SaveChangesAsync();
